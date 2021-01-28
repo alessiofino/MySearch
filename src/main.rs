@@ -129,7 +129,6 @@ fn single_search(mut index: Index, query: &str) {
 
 fn ncur(mut index: Index, printer: CursedPrinter) {
     initscr();
-    raw();
     /* Allow for extended keyboard (like F1). */
     keypad(stdscr(), true);
     noecho();
@@ -150,8 +149,11 @@ fn ncur(mut index: Index, printer: CursedPrinter) {
                 return;
             }
             KEY_ENTER => {}
-            KEY_BACKSPACE => {
+            KEY_BACKSPACE | KEY_DC => {
                 text_query.pop();
+            }
+            KEY_DL => {
+                text_query.clear();
             }
             _ => {
                 let c = char::from_u32(ch as u32).expect("Invalid char");
@@ -162,7 +164,7 @@ fn ncur(mut index: Index, printer: CursedPrinter) {
         let search_results = index.search(&text_query, 10);
         let elapsed = start_instant.elapsed().as_micros();
         let legend = format!(
-            "Exit: F1 || Found {} results in {}us",
+            "Exit: F1 or Ctrl+C || Found {} results in {}us",
             search_results
                 .iter()
                 .map(|(_, ids)| ids.len())
