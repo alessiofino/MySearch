@@ -149,7 +149,7 @@ fn ncur(mut index: Index, printer: CursedPrinter) {
                 return;
             }
             KEY_ENTER => {}
-            KEY_BACKSPACE | KEY_DC => {
+            KEY_BACKSPACE | KEY_DC | 127 => {
                 text_query.pop();
             }
             KEY_DL => {
